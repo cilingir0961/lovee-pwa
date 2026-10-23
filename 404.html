@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<base href="/lovee-pwa/">
+<title>LOVEE</title>
+<meta name="description" content="LOVEE — gerçek insanlarla tanış.">
+<meta name="theme-color" content="#12110F">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="LOVEE">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="manifest.json">
+</head>
+<body>
+<style>
+  /* Açılış: uygulamanın koyu sahnesi (kömür, fildişi, bakır). Flutter kendi temasını çizer. */
+  @font-face { font-family: "Bodoni Moda"; font-style: italic; font-weight: 400; font-display: swap; src: url("assets/assets/fonts/BodoniModa-Italic.ttf") format("truetype"); }
+  @font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 500; font-display: swap; src: url("assets/assets/fonts/BodoniModa-Medium.ttf") format("truetype"); }
+  :root {
+    --charcoal: #12110F;
+    --ivory: #EFE8DC;
+    --stone: #A39A8D;
+    --copper: #C08A5D;
+    color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--charcoal); color: var(--ivory); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  #boot {
+    position: fixed; inset: 0; display: grid; place-content: center; gap: 18px; text-align: center;
+    padding-inline: 24px; background: var(--charcoal); transition: opacity 0.4s ease;
+  }
+  #boot .mark {
+    width: 64px; height: 64px; margin-inline: auto; border-radius: 50%; border: 1px solid var(--copper);
+    display: grid; place-items: center; color: var(--copper);
+    font: italic 400 36px/1 "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  }
+  #boot h1 { margin: 0; font: 500 26px/1 "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif; letter-spacing: 8px; }
+  #boot p { margin: 0; color: var(--stone); font-size: 13px; line-height: 1.5; max-width: 32ch; letter-spacing: 0.3px; }
+  #boot .bar { width: 96px; height: 1px; margin-inline: auto; background: rgba(239, 232, 220, 0.15); overflow: hidden; }
+  #boot .bar i { display: block; width: 40%; height: 100%; background: var(--copper); animation: slide 1.4s ease-in-out infinite; }
+  #boot[data-failed] .bar { display: none; }
+  @keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+  @media (prefers-reduced-motion: reduce) { #boot .bar i { animation: none; width: 100%; } }
+</style>
+
+<div id="boot" role="status" aria-live="polite">
+  <div class="mark" aria-hidden="true">L</div>
+  <h1>LOVEE</h1>
+  <p id="boot-msg">Yükleniyor…</p>
+  <div class="bar" aria-hidden="true"><i></i></div>
+</div>
+
+<script>
+  // Flutter ilk kareyi çizince açılış ekranını kaldır. Yavaş bağlantıda önce bilgi ver, çok uzun sürerse uyar.
+  (function () {
+    var boot = document.getElementById('boot');
+    var msg = document.getElementById('boot-msg');
+    var done = false;
+    window.addEventListener('flutter-first-frame', function () {
+      done = true;
+      boot.style.opacity = '0';
+      setTimeout(function () { boot.hidden = true; }, 450);
+    });
+    setTimeout(function () { if (!done) msg.textContent = 'Bağlantı yavaş görünüyor, yükleniyor…'; }, 20000);
+    setTimeout(function () {
+      if (done) return;
+      boot.setAttribute('data-failed', '');
+      msg.textContent = 'Uygulama açılamadı. İnternet bağlantınızı kontrol edip sayfayı yenileyin.';
+    }, 90000);
+  })();
+</script>
+<script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
